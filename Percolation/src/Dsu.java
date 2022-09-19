@@ -1,60 +1,54 @@
+import edu.princeton.cs.algs4.WeightedQuickUnionUF;
+
 public class Dsu {
+  private final WeightedQuickUnionUF weightedQuickUnionUF;
+  private final boolean[] mask;
+
   private int cnt;
 
-  private final int[] id;
-  private final int[] mask;
+  private final int topNode;
 
   private boolean percolates;
 
   Dsu(int size) {
+    weightedQuickUnionUF = new WeightedQuickUnionUF(size + 1);
     percolates = false;
+    mask = new boolean[size + 1];
+    topNode = size;
     cnt = size;
-    id = new int[size];
-    mask = new int[size];
-
-    for (int i = 0; i < size; ++i) {
-      id[i] = i;
-    }
 
     for (int i = 0; i < Math.sqrt(size); ++i) {
-      mask[i] |= 1;
-      mask[size - i - 1] |= 2;
+      mask[size - i - 1] = true;
     }
+  }
+
+  public int getTopNode() {
+    return topNode;
+  }
+
+  public boolean isLinkedTop(int u) {
+    return weightedQuickUnionUF.find(u) == weightedQuickUnionUF.find(topNode);
   }
 
   public boolean isPercolates() {
     return percolates;
   }
 
-  public int find(int u) {
-    if (u == id[u]) {
-      return u;
-    } else {
-      id[u] = find(id[u]);
-      return id[u];
-    }
-  }
-
-  public int getMask(int u) {
-    return mask[find(u)];
-  }
-
-  public boolean checkComponent(int u, int v) {
-    return find(u) != find(v);
+  public boolean getMask(int u) {
+    return mask[weightedQuickUnionUF.find(u)];
   }
 
   public void union(int u, int v) {
-    if (checkComponent(u, v)) {
+    if (weightedQuickUnionUF.find(u) != weightedQuickUnionUF.find(v)) {
+      boolean check = mask[weightedQuickUnionUF.find(u)] | mask[weightedQuickUnionUF.find(v)];
       cnt--;
-      u = find(u);
-      v = find(v);
-      id[u] = v;
-      mask[v] |= mask[u];
+      weightedQuickUnionUF.union(u, v);
+      mask[weightedQuickUnionUF.find(u)] = check;
     }
   }
 
   public void open(int u) {
-    if (mask[find(u)] == 3) {
+    if (getMask(u) && isLinkedTop(u)) {
       percolates = true;
     }
   }
@@ -62,6 +56,4 @@ public class Dsu {
   public int count() {
     return cnt;
   }
-
-
 }

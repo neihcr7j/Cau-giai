@@ -1,4 +1,5 @@
 public class Percolation {
+  private static final int S = 4;
   private final int n;
   private final Dsu dsu;
   private final boolean[][] arr;
@@ -32,7 +33,11 @@ public class Percolation {
       arr[row][col] = true;
       cnt++;
 
-      for (int i = 0; i < 4; ++i) {
+      if (row == 0) {
+        dsu.union(dsu.getTopNode(), covert(row, col));
+      }
+
+      for (int i = 0; i < S; ++i) {
         if (row + ii[i] >= 0 && row + ii[i] < n && col + jj[i] >= 0 && col + jj[i] < n) {
           if (arr[row + ii[i]][col + jj[i]]) {
             dsu.union(covert(row, col), covert(row + ii[i], col + jj[i]));
@@ -60,7 +65,7 @@ public class Percolation {
     if (row < 0 || row >= n || col < 0 || col >= n) {
       throw new IllegalArgumentException();
     }
-    return arr[row][col] && (dsu.getMask(covert(row, col)) == 3 || dsu.getMask(covert(row, col)) == 1);
+    return arr[row][col] && dsu.isLinkedTop(covert(row, col));
   }
 
   public int numberOfOpenSites() {
@@ -72,11 +77,11 @@ public class Percolation {
   }
 
   public static void main(String[] args) {
-    PercolationStats percolationStats = new PercolationStats(2, 100000);
+    Percolation percolation = new Percolation(3);
+    percolation.open(1, 1);
+    percolation.open(2, 1);
+    percolation.open(2, 2);
 
-    System.out.println(percolationStats.mean());
-    System.out.println(percolationStats.stddev());
-    System.out.println(percolationStats.confidenceLo());
-    System.out.println(percolationStats.confidenceHi());
+    System.out.println(percolation.percolates());
   }
 }

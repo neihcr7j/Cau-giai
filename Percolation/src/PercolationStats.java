@@ -1,11 +1,11 @@
+import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
 
 public class PercolationStats {
+  private static final double C = 1.96;
   private final int trials;
-
   private final double[] list;
-  private static final double c = 1.96;
 
   public PercolationStats(int n, int trials) {
     if (n <= 0 || trials <= 0) {
@@ -45,19 +45,29 @@ public class PercolationStats {
   }
 
   public double confidenceLo() {
-    return mean() - c * stddev() / Math.sqrt(trials);
+    return mean() - C * stddev() / Math.sqrt(trials);
   }
 
   public double confidenceHi() {
-    return mean() + c * stddev() / Math.sqrt(trials);
+    return mean() + C * stddev() / Math.sqrt(trials);
   }
 
   public static void main(String[] args) {
-    PercolationStats percolationStats = new PercolationStats(2, 100000);
+    int n = 2;
+    int t = 100000;
+    if (args.length >= 2) {
+      n = Integer.parseInt(args[0]);
+      t = Integer.parseInt(args[1]);
+    }
+    PercolationStats percolationStats = new PercolationStats(n, t);
 
-    System.out.println(percolationStats.mean());
-    System.out.println(percolationStats.stddev());
-    System.out.println(percolationStats.confidenceLo());
-    System.out.println(percolationStats.confidenceHi());
+    StdOut.println("mean                    = " + percolationStats.mean());
+    StdOut.println("stddev                  = " + percolationStats.stddev());
+    StdOut.println(
+        "95% confidence interval = ["
+            + percolationStats.confidenceLo()
+            + ", "
+            + percolationStats.confidenceHi()
+            + "]");
   }
 }
