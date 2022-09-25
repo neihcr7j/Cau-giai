@@ -9,13 +9,19 @@ public class Main {
     int[][] tiles = new int[n][n];
     for (int i = 0; i < n; i++) for (int j = 0; j < n; j++) tiles[i][j] = in.readInt();
     Board initial = new Board(tiles);
+//    Board board = new Board(tiles);
 
-    System.out.println(initial.twin());
+//    System.out.println(initial.twin());
+//    System.out.println(initial.twin());
+//    System.out.println(initial.twin());
+//
+//    System.out.println(board.equals(initial));
 
-    // solve the puzzle
     Solver solver = new Solver(initial);
 
-    // print solution to standard output
+    StdOut.println("Minimum number of moves = " + solver.moves());
+    System.out.println(solver.solution());
+    System.out.println();
     if (!solver.isSolvable())
       StdOut.println("No solution possible");
     else {

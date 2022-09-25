@@ -105,7 +105,6 @@ public class Board {
     return new Iterable<Board>() {
       @Override
       public Iterator<Board> iterator() {
-
         return new IteratorBorad();
       }
     };
@@ -169,39 +168,11 @@ public class Board {
 
   // a board that is obtained by exchanging any pair of tiles
   public Board twin() {
-    int a = StdRandom.uniformInt(n);
-    int b = StdRandom.uniformInt(n);
-
-    int x = a;
-    int y = b;
-
-    if (StdRandom.uniformInt(2) == 0) {
-      if (a == 0) {
-        a++;
-      } else if (a == n - 1) {
-        a--;
-      } else {
-        if (StdRandom.uniformInt(2) == 0) {
-          a++;
-        } else {
-          a--;
-        }
-      }
+    if (tiles[0][0] != 0 && tiles[0][1] != 0) {
+      return swap(0, 0, 0, 1);
     } else {
-      if (b == 0) {
-        b++;
-      } else if (b == n - 1) {
-        b--;
-      } else {
-        if (StdRandom.uniformInt(2) == 0) {
-          b++;
-        } else {
-          b--;
-        }
-      }
+      return swap(1, 0, 1, 1);
     }
-
-    return swap(a, b, x, y);
   }
 
   // unit testing (not graded)
